@@ -1,7 +1,7 @@
 repeat task.wait() until game:IsLoaded() and game:GetService("Players") and game:GetService("Players").LocalPlayer and game:GetService("Players").LocalPlayer.Character
 
 local freescripts = {
-     [126884695634066] = "https://api.luarmor.net/files/v3/loaders/cea888e6d9e0c6f881ebc8a3d70c3cfb.lua",
+     [126884695634066] = "https://raw.githubusercontent.com/NoLag-id/No-Lag-HUB/refs/heads/main/Garden/Garden-V2.lua",
 }
 local scripts = {
     [126884695634066] = "https://api.luarmor.net/files/v3/loaders/cea888e6d9e0c6f881ebc8a3d70c3cfb.lua",
@@ -17,13 +17,39 @@ if skip_ui then
     end
 end
 
-if script_key and script_key ~= "" and script_key ~= "your_key" then
+-- [ИЗМЕНЕНО] Упрощенная проверка ключа - пропускает любой ввод
+if script_key and script_key ~= "" then -- Убрана проверка на "your_key"
     local url = scripts[game.PlaceId]
     if url then
         loadstring(game:HttpGetAsync(url))()
         isLoad = true
     end
 end
+
+-- [ИЗМЕНЕНО] Упрощенная проверка в интерфейсе
+submitButton.MouseButton1Click:Connect(function()
+    TweenService:Create(submitButton, TweenInfo.new(0.1), {Size = UDim2.new(1, -45, 0, 35)}):Play()
+    wait(0.1)
+    TweenService:Create(submitButton, TweenInfo.new(0.1), {Size = UDim2.new(1, -40, 0, 40)}):Play()
+
+    local enteredKey = inputBox.Text
+    -- [ИЗМЕНЕНО] Пропускаем любой ключ, даже пустой
+    local tween = TweenService:Create(keyFrame, TweenInfo.new(0.3), {
+        BackgroundTransparency = 1,
+        Size = UDim2.new(0, 0, 0, 0),
+        Position = UDim2.new(0.5, 0, 0.5, 0)
+    })
+    tween:Play()
+    tween.Completed:Wait()
+    keyFrame:Destroy()
+    task.spawn(function()
+        script_key = tostring(enteredKey) or "bypass_key" -- [ИЗМЕНЕНО] Дефолтный ключ
+        local url = scripts[game.PlaceId]
+        if url then
+            loadstring(game:HttpGetAsync(url))()
+        end
+    end)
+end)
 if not isLoad then
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
